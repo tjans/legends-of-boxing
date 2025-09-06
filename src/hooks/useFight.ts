@@ -19,6 +19,7 @@ const useFight = () => {
         {enabled: fight != undefined}
     ));
 
+    // Fetch the fighters
     const {data: redFighter} = useQuery(createFighterQueryOptions(
         {fighterId: fight?.redFighterId, fightId: fight?.id} as FighterParams,
         {enabled: fight != undefined}
@@ -29,6 +30,7 @@ const useFight = () => {
         {enabled: fight != undefined}
     ));
 
+    // Fetch the round segments for the current round
     const {data: roundSegments} = useQuery(createRoundSegmentListQueryOptions(
         {fightId: fightId!, round: currentRound?.number!} as RoundSegmentListParams,
         {enabled: currentRound != undefined}

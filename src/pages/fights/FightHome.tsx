@@ -48,7 +48,7 @@ export default function FightHome() {
           <Button 
             onClick={() => navigate(`/fight/${fightId}/mode-selection`)}
           >
-            Continue Round 1
+            Continue Round 1 (make this skip the mode selection screen if segments exist)
           </Button>
 
         )}

@@ -22,7 +22,6 @@ export type RoundSegment = {
     blueFoulPoints: number;
 };
 
-
 export const getRoundSegmentsByFightIdAndRound = async (params: RoundSegmentListParams): Promise<RoundSegment[] | null> => {
     const segments = await db.roundSegments.where({ fightId: params.fightId, round: params.round }).toArray() as RoundSegment[];
     if(!segments || segments.length === 0) return null;

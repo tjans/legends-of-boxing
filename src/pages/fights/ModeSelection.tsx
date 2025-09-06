@@ -3,7 +3,7 @@ import ContentWrapper from "@/components/ContentWrapper";
 import Button from '@/components/Elements/Button';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteCurrentRound, saveRound, Round, createCurrentRoundQueryOptions, RoundParams } from '@/types/Round';
+import { deleteCurrentRound, saveRound, Round, createCurrentRoundQueryOptions, RoundParams, RoundModeKey, RoundMode } from '@/types/Round';
 
 import useFight from '@/hooks/useFight';
 import ModeSelector from '@/components/app/ModeSelector';
@@ -29,7 +29,7 @@ export default function ModeSelection() {
         }
     });
 
-    // Need to create a mutation that deletes the current round.
+    // Allows for undoing the current round if it hasn't started yet
     const deleteRoundMutation = useMutation({
         mutationFn: () => deleteCurrentRound(fightId!),
         onSuccess: () => {
@@ -48,12 +48,13 @@ export default function ModeSelection() {
         alert('Fight!');
     }
 
-    const handleModeChange = (color: 'red' | 'blue', mode: any) => {
+    const handleModeChange = (color: 'red' | 'blue', mode: RoundMode) => {
         if (!currentRound) return;
         
-        const updatedRound = {
+        const key: RoundModeKey = color === 'red' ? 'redMode' : 'blueMode';
+        const updatedRound: Round = {
             ...currentRound,
-            [color === 'red' ? 'redMode' : 'blueMode']: mode
+            [key]: mode
         };
         
         saveRoundMutation.mutate(updatedRound);
@@ -93,6 +94,7 @@ export default function ModeSelection() {
                     */}
                     {!roundSegments && 
                     <Button color="secondary" onClick={handleUndo}>Undo</Button>}
+                    <Button color="secondary" onClick={() => navigate(`/fight/${fightId}`)}>Back</Button>
 
                     {currentRound.blueMode && currentRound.redMode && 
                         <Button color="success" onClick={handleFight}>Fight!</Button>

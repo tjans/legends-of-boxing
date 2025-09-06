@@ -9,6 +9,7 @@ export type RoundMode = "INS" | "OUT" | "PRS" | "ELU";
 export type JudgeIndex = 1 | 2 | 3;
 export type JudgeKey = `${FighterColor}Judge${JudgeIndex}`;
 export type OpenActionResult = "CHESS" | "NORMAL" | "BRAWL";
+export type RoundModeKey = "redMode" | "blueMode";
 
 // Extract takes two types (keyof Round, JudgeKey) and produces a new type that includes only the values of Round that are 
 // assignable to JudgeKey.  Why is this needed?  In my case, keyof Round contains ALL property names (including non-judge 

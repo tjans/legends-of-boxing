@@ -21,6 +21,20 @@ export type Fight = {
     date: number;
 } | undefined;
     
+
+/*
+    Testing out this pattern.  Basically, you provide a query factory that returns you the
+    query options for a react query.  It takes in a params object and additional options
+    you want to append to the existing options (like enabled, etc).  The body of the function
+    applies the additional options, and also returns a query function that fetches the data.
+
+    the params object is typed to the expected input for the query function, including things
+    like fightId, or other things needed to fetch the data.
+
+    The SafeQueryOptionsFor<T> type is a utility type that omits the queryKey and queryFn
+    from the UseQueryOptions type, so you can't provide them when calling the function.
+*/
+
 export function createFightQueryOptions(
   params: FightParams,
   options?: SafeQueryOptionsFor<Fight>
