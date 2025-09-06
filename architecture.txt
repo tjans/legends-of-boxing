@@ -1,0 +1,59 @@
+A fight will consist of:
+    Red fighter
+    Blue fighter
+    
+    RoundNumber
+
+    Segments[]
+        SegmentNumber
+        RedPoints
+        RedCutPoints (Right/Left/Other)
+        RedFoulPoints
+        BluePoints
+        BlueCutPoints (Right/Left/Other)
+        BlueFoulPoints
+
+Components:
+    Round Results - Each segment with points 
+    Round UI - buttons for entering cut, foul, punch points
+    Judges Scoring - buttons for entering must scoring points
+    Fighter Card - details about the fighter's attributes
+    
+
+
+Fight Home:
+    If there is no round, show button for begin fight that will create a Round and send user to mode selection screen
+    If there is a round but no segments, round hasn't started - show a button to set the mode for the fighters
+    If there is a round that has segments with more segments remaining, show a button to "continue fight" that takes them to the Round screen
+    If there is a round that has segments and we've completed the last segment, show a button to "End of Round Scoring"
+    Permanent deductions can be entered here?
+    Show fight results here
+
+    <button>Begin fight</button>
+    <button>Start round, continue round, end of round scoring</button>
+    <button>Enter Decision</button>
+
+
+Mode Selection
+    If there are active segments for this round, show a message (this fight has already started) with a link to the Round Screen
+    Otherwise provide ability to enter round deductions (a round has been created if we're at this screen)
+
+    <button>Fight Screen - save modes and send to "round" screen</button>
+    <button>Undo - Delete round and send the user to end of round scoring for previous round (or main screen if no round exists after deletion)</button>
+    <button>Back to Main</button>
+
+
+Round Screen
+    Show latest segment plus segment scoring buttons
+    <button>Next Segment/End of Round Scoring</button>
+    <button>Back to Main</button>
+    <button>Undo - delete current segment, if no segments remain, send back to mode selection</button>
+
+
+End of Round Screen
+    Show the judge's scoring UI
+    If you get here and the round isn't over, show a message this round is not completed, link to Round screen
+    
+    <button>back to main</button>
+    <button>Next Round - save judge's scoring, create a round, send user to mode selection screen</button>
+    <button>Undo - delete judge's scores from round, delete last segment, send user to Round screen to finish last segment</button>
