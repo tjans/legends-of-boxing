@@ -91,6 +91,7 @@ export function createCurrentRoundQueryOptions(
     gcTime: 0,
     queryKey: ["Round_currentRound", params],
     queryFn: async (): Promise<Round | null> => {
+        console.log("Key: ", ["Round_currentRound", params]);
       let rounds = await getRoundsByFightId(params.fightId);
       if(!rounds) return null;
       return rounds[rounds.length - 1] || null;

@@ -6,6 +6,7 @@ import { createCurrentRoundQueryOptions, RoundParams, saveRound } from "@/types/
 import { useParams } from 'react-router-dom';
 import Button from "@/components/Elements/Button";
 import { useNavigate } from "react-router-dom";
+import useFight from "@/hooks/useFight";
 
 
 export default function FightHome() {
@@ -26,15 +27,7 @@ export default function FightHome() {
     await saveRoundMutation.mutateAsync();
   }
 
-  // Only run the query if fightId is defined
-  const {data: fight} = useQuery(createFightQueryOptions(
-      {fightId: fightId!} as FightParams
-  ));
-
-  const {data: currentRound} = useQuery(createCurrentRoundQueryOptions(
-      {fightId: fightId!} as RoundParams,
-      {enabled: fight != undefined}
-  ));
+  const { fight, currentRound } = useFight();
 
   return (
     <>
