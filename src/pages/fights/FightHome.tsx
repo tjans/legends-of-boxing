@@ -1,8 +1,8 @@
 // foundation
 import ContentWrapper from "@/components/ContentWrapper";
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useMutation} from "@tanstack/react-query";
 import {createFightQueryOptions, FightParams} from "@/types/Fight"
-import { createCurrentRoundQueryOptions, RoundParams } from "@/types/Round";
+import { createCurrentRoundQueryOptions, RoundParams, saveRound } from "@/types/Round";
 import { useParams } from 'react-router-dom';
 import Button from "@/components/Elements/Button";
 import { useNavigate } from "react-router-dom";
@@ -12,10 +12,18 @@ export default function FightHome() {
   const { fightId } = useParams();
   const navigate = useNavigate();
 
-  const handleBeginRound = () => {
-    // Logic to begin the round goes here
-    console.log("create a Round and send user to mode selection screen");
-    navigate(`/fight/${fightId}/mode-selection`);
+  const saveRoundMutation = useMutation({
+    mutationFn: () => saveRound({
+      fightId: fightId!, 
+      number: 1
+    }),
+    onSuccess: () => {
+      navigate(`/fight/${fightId}/mode-selection`);
+    }
+  });
+
+  const handleBeginRound = async () => {
+    await saveRoundMutation.mutateAsync();
   }
 
   // Only run the query if fightId is defined
@@ -32,8 +40,25 @@ export default function FightHome() {
     <>
       <ContentWrapper>
         {fight && <pre>{JSON.stringify(fight, null, 2)}</pre>}
+        
+        {!currentRound && (
+          <Button 
+            onClick={handleBeginRound}
+            loading={saveRoundMutation.isPending}
+            disabled={saveRoundMutation.isPending}
+          >
+            Begin Round 1
+          </Button>
+        )}
 
-        {!currentRound && <Button onClick={handleBeginRound}>Begin Fight</Button>}
+        {currentRound && (
+          <Button 
+            onClick={() => navigate(`/fight/${fightId}/mode-selection`)}
+          >
+            Continue Round 1
+          </Button>
+
+        )}
 
         
           <p>If there is no round, show button for begin fight that will create a Round and send user to mode selection screen</p>

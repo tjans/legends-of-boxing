@@ -16,10 +16,10 @@ class LegendsOfBoxingDatabase extends Dexie {
   constructor() {
     super("legends-of-boxing");
 
-    this.version(1).stores({
+    this.version(2).stores({
       fighters: "id",
       fights: "id",
-      rounds: "id, [fightId+round]",
+      rounds: "id, fightId, [fightId+number]",
       roundSegments: "id, [fightId+round]",
       fightDeductions: "id, [fightId+fighterId], [fightId+round]",
     });
