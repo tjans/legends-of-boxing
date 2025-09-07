@@ -43,7 +43,7 @@ export type FighterParams = {
     fightId: UUID;
 }
 
-export function createFighterQueryOptions(
+export function fighterQueryOptions(
   params: FighterParams,
   options?: SafeQueryOptionsFor<Fighter>
 ) {

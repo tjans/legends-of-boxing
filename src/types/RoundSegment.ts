@@ -2,9 +2,10 @@ import { UUID } from "@/types/UUID";
 import { SafeQueryOptionsFor } from "./SafeQueryOptions";
 import { queryOptions } from "@tanstack/react-query";
 import { db } from "@/db";
+import utilities from "@/utilities";
 
 export type RoundSegment = {
-    id: string;
+    id?: string;
     fightId: UUID;
     round: number;
     segment: number;
@@ -31,13 +32,17 @@ export const getRoundSegmentsByFightIdAndRound = async (params: RoundSegmentList
     return segments;
 }
 
+export const saveRoundSegment = async (segment: RoundSegment): Promise<void> => {
+    if(!segment.id) segment.id = utilities.newId();
+    await db.roundSegments.put(segment);
+}
+
 export type RoundSegmentListParams = {
     fightId: UUID;
     round: number;
 }
 
-// Public query options
-export function createRoundSegmentListQueryOptions(
+export function roundSegmentListQueryOptions(
   params: RoundSegmentListParams,
   options?: SafeQueryOptionsFor<RoundSegment[]>
 ) {

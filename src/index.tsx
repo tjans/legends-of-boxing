@@ -20,6 +20,7 @@ import TextInputStyles from "@/pages/Styles/TextInputs";
 import SelectInputStyles from "@/pages/Styles/SelectInputs";
 import ColorTest from "@/pages/ColorTest";
 import FormStyles from "./pages/Styles/Forms";
+import Round from "./pages/fights/Round";
 
 import {
   QueryClient,
@@ -49,6 +50,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="/fight/:fightId" element={<FightHome />} />
         <Route path="/fight/:fightId/mode-selection" element={<ModeSelection />} />
+        <Route path="/fight/:fightId/round" element={<Round />} />
 
 
         <Route path="/members" element={<Members />} />

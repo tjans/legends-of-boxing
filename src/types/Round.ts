@@ -68,7 +68,7 @@ export const saveRound = async (round: Round): Promise<void> => {
 }
 
 // Public query options
-export function createRoundListQueryOptions(
+export function roundListQueryOptions(
   params: RoundParams,
   options?: SafeQueryOptionsFor<Round[]>
 ) {
@@ -83,7 +83,7 @@ export function createRoundListQueryOptions(
   })
 }
 
-export function createCurrentRoundQueryOptions(
+export function currentRoundQueryOptions(
   params: RoundParams,
   options?: SafeQueryOptionsFor<Round | null>
 ) {

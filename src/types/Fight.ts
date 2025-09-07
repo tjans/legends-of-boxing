@@ -35,7 +35,7 @@ export type Fight = {
     from the UseQueryOptions type, so you can't provide them when calling the function.
 */
 
-export function createFightQueryOptions(
+export function fightQueryOptions(
   params: FightParams,
   options?: SafeQueryOptionsFor<Fight>
 ) {

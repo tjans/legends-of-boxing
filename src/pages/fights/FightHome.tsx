@@ -1,8 +1,7 @@
 // foundation
 import ContentWrapper from "@/components/ContentWrapper";
-import {useQuery, useMutation} from "@tanstack/react-query";
-import {createFightQueryOptions, FightParams} from "@/types/Fight"
-import { createCurrentRoundQueryOptions, RoundParams, saveRound } from "@/types/Round";
+import {useMutation} from "@tanstack/react-query";
+import { saveRound } from "@/types/Round";
 import { useParams } from 'react-router-dom';
 import Button from "@/components/Elements/Button";
 import { useNavigate } from "react-router-dom";
