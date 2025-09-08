@@ -7,6 +7,7 @@ import Button from '@/components/Elements/Button';
 import { FaChevronUp } from "react-icons/fa";
 import { FaChevronDown } from 'react-icons/fa';
 import { RoundSegment, UpdatableKeys, useSaveRoundSegmentMutation } from '@/types/RoundSegment';
+import utilities from "@/utilities";
 
 export default function RoundHome() {
   const fightData = useFight();
@@ -40,7 +41,7 @@ export default function RoundHome() {
               {fightData.roundSegments.slice(-4).map((segment) => (
                 <React.Fragment key={segment.id}>
                 <th key={segment.id} className="text-center font-bold px-4">
-                  {segment.segment}
+                  {segment.segment} - {utilities.getSegmentTime(segment.segment)}
                 </th>
                 <th className="px-4 text-center">F</th>
                 </React.Fragment>
@@ -157,7 +158,8 @@ export default function RoundHome() {
 
 
         <div className="space-x-2 my-4">
-          <Button>Undo</Button>
+          <Button color="secondary">Undo</Button>
+          <Button color="success">Next (create next segment)</Button>
         </div>
 
         <pre>
