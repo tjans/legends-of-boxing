@@ -1,7 +1,7 @@
 // foundation
 import ContentWrapper from "@/components/ContentWrapper";
 import {useMutation} from "@tanstack/react-query";
-import { saveRound } from "@/types/Round";
+import { saveRound } from "@/services/roundService";
 import { useParams } from 'react-router-dom';
 import Button from "@/components/Elements/Button";
 import { useNavigate } from "react-router-dom";

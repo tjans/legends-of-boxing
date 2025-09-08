@@ -3,11 +3,13 @@ import ContentWrapper from "@/components/ContentWrapper";
 import Button from '@/components/Elements/Button';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteCurrentRound, saveRound, Round, currentRoundQueryOptions, RoundParams, RoundModeKey, RoundMode } from '@/types/Round';
+import { Round, currentRoundQueryOptions, RoundParams, RoundModeKey, RoundMode } from '@/types/Round';
+import { deleteCurrentRound, saveRound } from '@/services/roundService';
 
 import useFight from '@/hooks/useFight';
 import ModeSelector from '@/components/app/ModeSelector';
-import { RoundSegment, roundSegmentListQueryOptions, saveRoundSegment } from '@/types/RoundSegment';
+import { RoundSegment, roundSegmentListQueryOptions } from '@/types/RoundSegment';
+import { saveRoundSegment } from '@/services/RoundSegmentService';
 import { UUID } from '@/types/UUID';
 
 export default function ModeSelection() {

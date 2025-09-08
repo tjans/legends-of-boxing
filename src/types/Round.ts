@@ -1,9 +1,8 @@
-import { db } from "@/db";
 import { queryOptions } from "@tanstack/react-query";
 import { UUID } from "./UUID";
 import { SafeQueryOptionsFor } from "@/types/SafeQueryOptions";
 import { FighterColor } from "@/types/Fight";
-import utilities from "@/utilities";
+import { getRoundsByFightId } from "@/services/roundService";
 
 export type RoundMode = "INS" | "OUT" | "PRS" | "ELU";
 export type JudgeIndex = 1 | 2 | 3;
@@ -36,37 +35,6 @@ export type RoundParams = {
     fightId: UUID;
 }
 
-
-// Private functions
-export const getRoundsByFightId = async (fightId: UUID): Promise<Round[] | null> => {
-    try {
-        let rounds = await db.rounds.where("fightId").equals(fightId).toArray();
-        
-        if (!rounds || rounds.length === 0) {
-            return null;
-        }
-        
-        rounds.sort((a, b) => a.number - b.number);
-        return rounds;
-    } catch (error) {
-        console.error("Error in getRoundsByFightId:", error);
-        return null;
-    }
-}
-
-export const deleteCurrentRound = async (fightId: UUID): Promise<void> => {
-    let rounds = await getRoundsByFightId(fightId);
-    if(!rounds) return;
-
-    let round = rounds.pop();
-    await db.rounds.delete(round!.id!);
-}
-
-export const saveRound = async (round: Round): Promise<void> => {
-    if(!round.id) round.id = utilities.newId();
-    await db.rounds.put(round);
-}
-
 // Public query options
 export function roundListQueryOptions(
   params: RoundParams,
@@ -92,7 +60,6 @@ export function currentRoundQueryOptions(
     gcTime: 0,
     queryKey: ["Round_currentRound", params],
     queryFn: async (): Promise<Round | null> => {
-        console.log("Key: ", ["Round_currentRound", params]);
       let rounds = await getRoundsByFightId(params.fightId);
       if(!rounds) return null;
       return rounds[rounds.length - 1] || null;

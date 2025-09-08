@@ -1,9 +1,10 @@
 import { UUID } from "@/types/UUID";
 import { SafeQueryOptionsFor } from "./SafeQueryOptions";
-import { queryOptions } from "@tanstack/react-query";
-import { db } from "@/db";
-import utilities from "@/utilities";
+import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { getRoundSegmentsByFightIdAndRound, saveRoundSegment } from "@/services/RoundSegmentService";
+
+//#region Types
 export type RoundSegment = {
     id?: string;
     fightId: UUID;
@@ -23,25 +24,17 @@ export type RoundSegment = {
     blueFoulPoints: number;
 };
 
-export const getRoundSegmentsByFightIdAndRound = async (params: RoundSegmentListParams): Promise<RoundSegment[] | null> => {
-    const segments = await db.roundSegments.where({ fightId: params.fightId, round: params.round }).toArray() as RoundSegment[];
-    if(!segments || segments.length === 0) return null;
-    
-    // Sort by segment number
-    segments.sort((a, b) => a.segment - b.segment);
-    return segments;
-}
-
-export const saveRoundSegment = async (segment: RoundSegment): Promise<void> => {
-    if(!segment.id) segment.id = utilities.newId();
-    await db.roundSegments.put(segment);
-}
+// Use keyof to get only the numeric properties from RoundSegment
+export type UpdatableKeys = 'redPoints' | 'redRightEyeCut' | 'redLeftEyeCut' | 'redOtherCut' | 'redFoulPoints' | 'bluePoints' | 'blueRightEyeCut' | 'blueLeftEyeCut' | 'blueOtherCut' | 'blueFoulPoints';
 
 export type RoundSegmentListParams = {
     fightId: UUID;
     round: number;
 }
 
+//#endregion
+
+//#region Query options
 export function roundSegmentListQueryOptions(
   params: RoundSegmentListParams,
   options?: SafeQueryOptionsFor<RoundSegment[]>
@@ -56,3 +49,29 @@ export function roundSegmentListQueryOptions(
     },
   })
 }
+//#endregion
+
+
+
+
+//#region Mutation Hooks
+export function useSaveRoundSegmentMutation() {
+    const queryClient = useQueryClient(); // Use the existing query client from context
+
+    return useMutation({
+        mutationFn: async (roundSegment: RoundSegment) => saveRoundSegment(roundSegment),
+        onSuccess: (_data, variables: RoundSegment) => {
+            
+            // Use the original variables (the roundSegment you passed to mutate)
+            const params: RoundSegmentListParams = { 
+                fightId: variables.fightId, 
+                round: variables.round 
+            };
+            
+            queryClient.invalidateQueries({
+                queryKey: roundSegmentListQueryOptions(params).queryKey
+            });
+        }
+    });
+} 
+// #endregion
