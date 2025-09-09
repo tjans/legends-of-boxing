@@ -2,12 +2,12 @@ import { UUID } from "@/types/UUID";
 import { SafeQueryOptionsFor } from "./SafeQueryOptions";
 import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { getRoundSegmentsByFightIdAndRound, saveRoundSegment } from "@/services/RoundSegmentService";
+import { deleteRoundSegment, getRoundSegmentsByFightIdAndRound, saveRoundSegment } from "@/services/RoundSegmentService";
 
 //#region Types
 export type RoundSegment = {
     id?: string;
-    fightId: UUID;
+    fightId: string;
     round: number;
     segment: number;
 
@@ -52,6 +52,24 @@ export function roundSegmentListQueryOptions(
 //#endregion
 
 
+export function useDeleteRoundSegmentMutation() {
+  const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (roundSegment: RoundSegment) => deleteRoundSegment(roundSegment.id!),
+        onSuccess: (_data, variables) => {
+            // Use the original variables (the roundSegment you passed to mutate)
+            const params: RoundSegmentListParams = { 
+                fightId: variables.fightId, 
+                round: variables.round 
+            };
+
+            queryClient.invalidateQueries({
+                queryKey: roundSegmentListQueryOptions(params).queryKey
+            });
+        }
+    });
+}
 
 
 //#region Mutation Hooks
