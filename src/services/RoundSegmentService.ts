@@ -1,5 +1,6 @@
 import { db } from '@/db';
 import { RoundSegment, RoundSegmentListParams } from '@/types/RoundSegment';
+import { UUID } from '@/types/UUID';
 import utilities from '@/utilities';
 
 
@@ -18,5 +19,19 @@ export const getRoundSegmentsByFightIdAndRound = async (params: RoundSegmentList
     
     // Sort by segment number
     segments.sort((a, b) => a.segment - b.segment);
+    return segments;
+}
+
+export const getAllRoundSegmentsByFight = async (fightId: UUID): Promise<RoundSegment[]> => {
+    const segments = await db.roundSegments.where({ fightId }).toArray() as RoundSegment[];
+    if(!segments || segments.length === 0) return [] as RoundSegment[];
+    
+    // Sort by round number, then by segment number
+    segments.sort((a, b) => {
+        if(a.round === b.round) {
+            return a.segment - b.segment;
+        }
+        return a.round - b.round;
+    });
     return segments;
 }

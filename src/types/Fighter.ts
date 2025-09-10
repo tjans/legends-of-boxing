@@ -1,7 +1,8 @@
 import { UUID } from "@/types/UUID";
 import { SafeQueryOptionsFor } from "./SafeQueryOptions";
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { db } from "@/db";
+import { getAllRoundSegmentsByFight } from "@/services/RoundSegmentService";
 
 export type CompetitionLevel = "Regional" | "National" | "Continental" | "World";
 export type DevelopmentStage = "Novice" | "Seasoned" | "Adept" | "Prime" | "Ring Attrition";

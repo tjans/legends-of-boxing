@@ -1,8 +1,8 @@
 import { UUID } from "@/types/UUID";
 import { SafeQueryOptionsFor } from "./SafeQueryOptions";
-import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { deleteRoundSegment, getRoundSegmentsByFightIdAndRound, saveRoundSegment } from "@/services/RoundSegmentService";
+import { deleteRoundSegment, getAllRoundSegmentsByFight, getRoundSegmentsByFightIdAndRound, saveRoundSegment } from "@/services/RoundSegmentService";
 
 //#region Types
 export type RoundSegment = {
@@ -34,60 +34,59 @@ export type RoundSegmentListParams = {
 
 //#endregion
 
+// #region Keys
+export const roundSegmentKeys = {
+    base: ['fight', 'round', 'segments'] as const,
+    listByFight: (fightId: UUID) => [...roundSegmentKeys.base, fightId] as const,
+    listByRound: (fightId: UUID, round: number) => [...roundSegmentKeys.listByFight(fightId), round] as const,
+};
+// #endregion
+
 //#region Query options
-export function roundSegmentListQueryOptions(
-  params: RoundSegmentListParams,
-  options?: SafeQueryOptionsFor<RoundSegment[]>
+export const useAllRoundSegments = (fightId: UUID, options?:SafeQueryOptionsFor<RoundSegment[]>) => 
+  useQuery({
+    queryKey: roundSegmentKeys.listByFight(fightId),
+    queryFn: () => getAllRoundSegmentsByFight(fightId),
+    ...options
+  }) 
+
+export function useRoundSegmentsByRound(
+    params: RoundSegmentListParams,
+    options?: SafeQueryOptionsFor<RoundSegment[]>
 ) {
-  return queryOptions({
-    ...options,
-    gcTime: 0,
-    queryKey: ["RoundSegment_list", params],
-    queryFn: async (): Promise<RoundSegment[]> => {
-      let segments = await getRoundSegmentsByFightIdAndRound(params) || [] as RoundSegment[];
-      return segments;
-    },
-  })
+    return useQuery({
+        queryKey: roundSegmentKeys.listByRound(params.fightId, params.round),
+        queryFn: async (): Promise<RoundSegment[]> => {
+            const segments = await getRoundSegmentsByFightIdAndRound(params) || [];
+            return segments;
+        },
+        ...options,
+        gcTime: 0,
+    });
 }
 //#endregion
 
-
+//#region Mutation Hooks
 export function useDeleteRoundSegmentMutation() {
   const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async (roundSegment: RoundSegment) => deleteRoundSegment(roundSegment.id!),
-        onSuccess: (_data, variables) => {
-            // Use the original variables (the roundSegment you passed to mutate)
-            const params: RoundSegmentListParams = { 
-                fightId: variables.fightId, 
-                round: variables.round 
-            };
-
-            queryClient.invalidateQueries({
-                queryKey: roundSegmentListQueryOptions(params).queryKey
-            });
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: roundSegmentKeys.base});
         }
     });
 }
 
-
-//#region Mutation Hooks
 export function useSaveRoundSegmentMutation() {
     const queryClient = useQueryClient(); // Use the existing query client from context
 
     return useMutation({
         mutationFn: async (roundSegment: RoundSegment) => saveRoundSegment(roundSegment),
-        onSuccess: (_data, variables: RoundSegment) => {
-            
-            // Use the original variables (the roundSegment you passed to mutate)
-            const params: RoundSegmentListParams = { 
-                fightId: variables.fightId, 
-                round: variables.round 
-            };
-            
+        onSuccess: () => {
+            // Invalidate all queries that start with ['fight', 'round', 'segments']
             queryClient.invalidateQueries({
-                queryKey: roundSegmentListQueryOptions(params).queryKey
+                queryKey: roundSegmentKeys.base
             });
         }
     });

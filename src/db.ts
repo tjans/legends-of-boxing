@@ -5,6 +5,7 @@ import { Round } from "@/types/Round";
 import { RoundSegment } from "@/types/RoundSegment";
 import utilities from "@/utilities";
 import { FightDeduction } from "./types/FightDeduction";
+import { HealthStats } from "@/types/HealthStats";
 
 class LegendsOfBoxingDatabase extends Dexie {
     fighters!: Table<Fighter, string>;
@@ -12,11 +13,12 @@ class LegendsOfBoxingDatabase extends Dexie {
     rounds!: Table<Round, string>;
     roundSegments!: Table<RoundSegment, string>;
     fightDeductions!: Table<FightDeduction, string>;
+    healthStats!: Table<HealthStats, string>;
 
   constructor() {
     super("legends-of-boxing");
 
-    this.version(2).stores({
+    this.version(1).stores({
       fighters: "id",
       fights: "id",
       rounds: "id, fightId, [fightId+number]",

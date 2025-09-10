@@ -33,7 +33,7 @@ export type Fight = {
 
     The SafeQueryOptionsFor<T> type is a utility type that omits the queryKey and queryFn
     from the UseQueryOptions type, so you can't provide them when calling the function.
-*/
+*/  
 
 export function fightQueryOptions(
   params: FightParams,

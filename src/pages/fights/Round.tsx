@@ -65,16 +65,16 @@ export default function RoundHome() {
 
   return (
     <>
-    <div>Make sure undo/next can't go past the first/last segment</div>
+    <pre>{JSON.stringify(fightData.getFighterHealth(), null, 2)}</pre>
+
     {(fightData.currentRound && fightData.roundSegments) && (
       <ContentWrapper>
         <h1 className="text-2xl font-bold">Round {fightData.currentRound.number}</h1>
-        Show cut points for the entire match
 
         <table>
           <thead>
             <tr>
-              {fightData.roundSegments.slice(-4).map((segment) => (
+              {fightData.roundSegments.slice(-5).map((segment) => (
                 <React.Fragment key={segment.id}>
                 <th key={segment.id} className="text-center font-bold px-4">
                   {utilities.getSegmentTime(segment.segment)}
@@ -87,7 +87,7 @@ export default function RoundHome() {
         
           <tbody>
             <tr>
-            {fightData.roundSegments.slice(-4).map((segment) => (
+            {fightData.roundSegments.slice(-5).map((segment) => (
                 <td className="border border-black px-4 font-bold text-red-600 text-center" key={"red_" + segment.id}>
                   {segment.redPoints ? segment.redPoints : ""}
                   {segment.redFoulPoints !== 0 && (<span className="text-sm text-gray-500"> (F{segment.redFoulPoints})</span>)}
@@ -99,7 +99,7 @@ export default function RoundHome() {
             </tr>
 
             <tr className="font-bold text-blue-600">
-            {fightData.roundSegments.slice(-4).map((segment) => (
+            {fightData.roundSegments.slice(-5).map((segment) => (
                 <td className="border border-black px-4 font-bold text-blue-600 text-center" key={"blue_" + segment.id}>
                   {segment.bluePoints ? segment.bluePoints : ""}
                   {segment.blueFoulPoints !== 0 && (<span className="text-sm text-gray-500"> (F{segment.blueFoulPoints})</span>)}
@@ -112,10 +112,8 @@ export default function RoundHome() {
           </tbody>
         </table>
 
-        <div className="flex gap-8">
+        <div className="flex gap-8 mt-4">
             <div>
-              <div>Show Cut/TKO points</div>
-
               <div className="font-bold mt-4">Punch</div>
               <div className="mb-4 flex gap-1">
                   <Button className={`w-12 bg-red-400 hover:bg-red-800 flex items-center justify-center`} onClick={() => handlePointsChange('redPoints', 1)}><FaChevronUp /></Button>
@@ -155,8 +153,6 @@ export default function RoundHome() {
             </div>
 
             <div>
-              <div>Show Cut/TKO points</div>
-
               <div className="font-bold mt-4">Punch</div>
               <div className="mb-4 flex gap-1">
                   <Button className={`w-12 bg-blue-100 hover:bg-blue-800 flex items-center justify-center`} onClick={() => handlePointsChange('bluePoints', 1)}><FaChevronUp /></Button>

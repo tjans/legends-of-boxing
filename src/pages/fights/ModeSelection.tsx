@@ -8,7 +8,7 @@ import { deleteCurrentRound, saveRound } from '@/services/roundService';
 
 import useFight from '@/hooks/useFight';
 import ModeSelector from '@/components/app/ModeSelector';
-import { RoundSegment, roundSegmentListQueryOptions } from '@/types/RoundSegment';
+import { RoundSegment, roundSegmentKeys } from '@/types/RoundSegment';
 import { saveRoundSegment } from '@/services/RoundSegmentService';
 import { UUID } from '@/types/UUID';
 
@@ -39,7 +39,7 @@ const { fightId } = useParams<{ fightId: UUID }>();
         onSuccess: () => {
             // Invalidate round segments query if needed
             queryClient.invalidateQueries({
-                queryKey: roundSegmentListQueryOptions(roundSegmentListParams).queryKey
+                queryKey: roundSegmentKeys.listByRound(roundSegmentListParams.fightId, roundSegmentListParams.round)
             });
         }        
     });
